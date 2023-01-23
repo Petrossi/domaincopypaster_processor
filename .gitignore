@@ -1,0 +1,8 @@
+.idea
+domainsurvey-crawler.iml
+.gradle/
+.idea/
+/target
+**/target
+docker/postgres/data
+/out

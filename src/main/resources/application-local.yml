@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/domainsurvey?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true
+    username: postgres
+    password: postgres
+server:
+  port: 8085

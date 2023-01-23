@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/alphacrawlerdb?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true
+    username: alphacrawleruser
+    password: eb\@>w>4>)b,[86p
+server:
+  port: 8085
+  tomcat:
+    remote_ip_header: x-forwarded-for
+    protocol_header: x-forwarded-proto

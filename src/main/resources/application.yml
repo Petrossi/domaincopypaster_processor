@@ -1,0 +1,78 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/domainsurvey?useUnicode=yes&characterEncoding=UTF-8&autoReconnect=true
+    username: postgres
+    password: postgres
+    platform: postgres
+  hikari:
+    minimumIdle: 10
+    connectionTimeout: 20000
+    idleTimeout: 10000
+    maximumPoolSize: 200
+    autoCommit: true
+    maxLifetime: 1000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        enable_lazy_load_no_trans: true
+        format_sql: false
+        show_sql: false
+        temp:
+          use_jdbc_metadata_defaults: false
+  flyway:
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    schemas: public
+    url: ${spring.datasource.url}
+  #    locations: classpath:migrations/schema,classpath:migrations/table
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 2000
+
+logging:
+  level:
+    org:
+      springframework:
+        web: ERROR
+        socket:
+          config:
+            WebSocketMessageBrokerStats: DEBUG
+      hibernate: ERROR
+    com:
+      crawler: DEBUG
+  pattern:
+    console: "%style{%d{HH:mm:ss}}{white}%highlight{%-5level }%style{%c{1}}{bright,yellow}:%msg%n%throwable"
+server:
+  port: 8085
+  connection-timeout: 15s
+  tomcat:
+    max-threads: 5000
+    accept-count: 1500
+    max-connections: 10000
+#  servlet:
+#    contextPath: '/crawler'
+crawler:
+  processor:
+    maxWaitTimeBeforeFinish: 30
+    maxMessagesPerTime: 50
+    maxParsingDomainsPerTime: 80
+  telegrambot:
+    token: 660244135:AAEsdYj4goU1qvdGGHfaFs8sWVdbQCJVTSM
+    channelId: -315113260
+    enable: true
+  memcached:
+    host: 'localhost'
+    port: '11211'
+  pageFetcher:
+    url: 'http://pf.sitechecker.pro'
+  userAgent: 'AlphacrawlerBotCrawler/1.0 (+https://alphacrawler.pro)'
+  proxy:
+    url: https://blazingseollc.com/proxy/dashboard/api/export/4/all/lych.yanina@gmail.com/HByzN27O/list.csv
+    enabled: false
+    updateDelay: 600000
+  dataTransfer:
+    path: /tmp/crawler_transfer_dump
