@@ -10,7 +10,7 @@ import com.domainsurvey.crawler.exception.CrawlingPageTableEmptyException;
 import com.domainsurvey.crawler.model.domain.Domain;
 import com.domainsurvey.crawler.model.domain.DomainCrawlingInfo;
 import com.domainsurvey.crawler.model.type.CrawlingStatus;
-import com.domainsurvey.crawler.service.backend.BackendService;
+import com.domainsurvey.crawler.service.backend.PublicService;
 import com.domainsurvey.crawler.service.crawler.CrawlerUtilsService;
 import com.domainsurvey.crawler.service.crawler.DomainStorage;
 import com.domainsurvey.crawler.service.crawler.finalizer.CrawlingFinalizerService;
@@ -34,7 +34,7 @@ public class CrawlingStarterServiceImpl implements CrawlingStarterService {
     private final TableService tableService;
     private final CrawlerUtilsService crawlerUtilsService;
     private final BeanFactory beanFactory;
-    private final BackendService backendService;
+    private final PublicService backendService;
     private final DomainStorage domainStorage;
     private final ProgressPublisherService progressPublisherService;
 

@@ -376,9 +376,9 @@ public class PageResult {
                     }
 
                     processLinks();
-//                    processImages();
-//                    processScripts();
-//                    processCss();
+                    processImages();
+                    processScripts();
+                    processCss();
 
                     pageMetaData.setInternalCountTotal(internalCountTotal);
                     pageMetaData.setExternalCountTotal(externalCountTotal);

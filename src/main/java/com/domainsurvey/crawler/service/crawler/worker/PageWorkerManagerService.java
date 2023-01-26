@@ -28,7 +28,7 @@ public class PageWorkerManagerService {
 
     private int threadCount = DEFAULT_THREAD_COUNT;
 
-    private List<PageWorkerService> workers = new ArrayList<>();
+    private final List<PageWorkerService> workers = new ArrayList<>();
 
     private volatile boolean inited;
     private volatile boolean isRunning;

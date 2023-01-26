@@ -1,6 +1,6 @@
 package com.domainsurvey.crawler;
 
-import com.domainsurvey.crawler.service.backend.BackendService;
+import com.domainsurvey.crawler.service.backend.PublicService;
 import com.domainsurvey.crawler.service.crawler.CrawlerUtilsService;
 import com.domainsurvey.crawler.service.crawler.CrawlerWorker;
 import com.domainsurvey.crawler.service.crawler.finalizer.CrawlingFinalizerService;
@@ -44,13 +44,13 @@ public class Application {
 
         startFinalizer(context);
 
-        startDeleter(context);
+//        startDeleter(context);
     }
 
     static void startParsing(ConfigurableApplicationContext context) {
         new StartParsingThread(() -> context.getBean(CrawlerUtilsService.class).startLastSession()).start();
         context.getBean(CrawlerWorker.class).startTaskMonitor();
-        context.getBean(BackendService.class).start();
+        context.getBean(PublicService.class).start();
     }
 
     static void startDeleter(ConfigurableApplicationContext context) {

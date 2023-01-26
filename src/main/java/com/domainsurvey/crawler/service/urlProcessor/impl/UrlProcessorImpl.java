@@ -1,5 +1,8 @@
 package com.domainsurvey.crawler.service.urlProcessor.impl;
 
+import com.domainsurvey.crawler.model.domain.Domain;
+import com.domainsurvey.crawler.service.PageCacheManager;
+import com.domainsurvey.crawler.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -13,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.domainsurvey.crawler.exception.NeedsRetryUrlProcessException;
@@ -36,6 +40,9 @@ public class UrlProcessorImpl implements UrlProcessor {
     private final FetcherProcessor fetcherProcessor;
     private final CrawlerResultProcessor crawlerResultProcessor;
 
+    @Autowired
+    private PageCacheManager pageCacheManager;
+
     public PageResult processUrl(UrlProcessorConfig config) throws NeedsRetryUrlProcessException {
         String validUrlToProcess = config.nodeToProcess.getUrl();
         PageResult pageResult = new PageResult();
@@ -53,12 +60,7 @@ public class UrlProcessorImpl implements UrlProcessor {
         List<Edge> edges = new ArrayList<>();
         HttpResult httpResult = null;
         try {
-            HttpConfig.HttpConfigBuilder httpConfigBuilder = HttpConfig
-                    .builder()
-                    .url(validUrlToProcess)
-                    .proxy(config.needsProxy)
-                    .clearHtml(false)
-                    .serviceType(config.domain.getConfig().isSpa() ? DESCRIPTOR_METHOD : HTTP_METHOD);
+            HttpConfig.HttpConfigBuilder httpConfigBuilder = HttpConfig.builder().url(validUrlToProcess).proxy(config.needsProxy).clearHtml(false).serviceType(config.domain.getConfig().isSpa() ? DESCRIPTOR_METHOD : HTTP_METHOD);
 
             if (config.nodeToProcess.getType() != NodeType.INTERNAL) {
                 httpConfigBuilder.onlyHeaders(true);
@@ -68,15 +70,11 @@ public class UrlProcessorImpl implements UrlProcessor {
 
             httpResult = fetcherProcessor.getPage(httpConfig);
 
-            CrawlerResultProcessorConfig crawlerResultProcessorConfig = new CrawlerResultProcessorConfig(
-                    httpResult,
-                    config.nodeToProcess,
-                    config.domain,
-                    config.robotsTxtParserService,
-                    config.httpRequestInfoCache
-            );
+            CrawlerResultProcessorConfig crawlerResultProcessorConfig = new CrawlerResultProcessorConfig(httpResult, config.nodeToProcess, config.domain, config.robotsTxtParserService, config.httpRequestInfoCache);
 
             pageResult = crawlerResultProcessor.processHttpResult(crawlerResultProcessorConfig);
+
+            finishProcessMessage(config.domain, httpResult, config.nodeToProcess.getId());
         } catch (Exception e) {
             e.printStackTrace();
             pageResult.setNodes(nodes);
@@ -93,6 +91,13 @@ public class UrlProcessorImpl implements UrlProcessor {
             throw new NeedsRetryUrlProcessException(true, pageResult.getStatusCode());
         }
 
+
         return pageResult;
+    }
+
+    private void finishProcessMessage(Domain domain, HttpResult httpResult, long id) {
+        if (httpResult.httpStatusCode == 200) {
+            pageCacheManager.savePage(Utils.getCRC32(domain.getUrl()), httpResult, id);
+        }
     }
 }

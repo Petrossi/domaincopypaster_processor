@@ -9,7 +9,7 @@ public enum SchemaType {
     FINAL("final"),
     LAST("last"),
     MONITORING("monitoring"),
-    BACKEND("backend");
+    PUBLIC("public");
 
     private String value;
 

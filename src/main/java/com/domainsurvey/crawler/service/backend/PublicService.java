@@ -19,12 +19,12 @@ import static com.domainsurvey.crawler.utils.Utils.sleepSeconds;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class BackendService implements Runnable {
+public class PublicService implements Runnable {
 
     private final QueryExecutor queryExecutor;
     private final DomainStorage domainStorage;
 
-    private static String tableName = String.format("%s.%s", SchemaType.BACKEND, TableType.DOMAIN);
+    private static String tableName = String.format("%s.%s", SchemaType.PUBLIC, TableType.DOMAIN);
 
     @Transactional
     public BackendDomain getNewDomain() throws EmptyResultDataAccessException {

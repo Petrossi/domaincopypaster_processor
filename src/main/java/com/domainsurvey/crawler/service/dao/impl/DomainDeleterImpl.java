@@ -1,7 +1,7 @@
 package com.domainsurvey.crawler.service.dao.impl;
 
 import com.domainsurvey.crawler.model.domain.Domain;
-import com.domainsurvey.crawler.service.backend.BackendService;
+import com.domainsurvey.crawler.service.backend.PublicService;
 import com.domainsurvey.crawler.service.backend.model.BackendDomain;
 import com.domainsurvey.crawler.service.dao.DomainDeleter;
 import com.domainsurvey.crawler.service.dao.DomainService;
@@ -21,7 +21,7 @@ import static com.domainsurvey.crawler.utils.Utils.sleepSeconds;
 @RequiredArgsConstructor
 public class DomainDeleterImpl implements DomainDeleter {
 
-    private final BackendService backendService;
+    private final PublicService backendService;
     private final DomainService domainService;
     private final TableService tableService;
     private final QueryExecutor queryExecutor;
@@ -52,7 +52,7 @@ public class DomainDeleterImpl implements DomainDeleter {
     }
 
     private void setDeleted() {
-        String sql = "update backend.domain \n" +
+        String sql = "update public.domain \n" +
                 "set status = 7 \n" +
                 "where non_deletable isnull and status = 2 and domain.created_at < (now() - '7 days'::interval);";
         try {

@@ -11,7 +11,7 @@ import com.domainsurvey.crawler.model.domain.DomainCrawlingInfo;
 import com.domainsurvey.crawler.model.type.CrawlingPriority;
 import com.domainsurvey.crawler.model.type.CrawlingStatus;
 import com.domainsurvey.crawler.model.type.FinalizerStatus;
-import com.domainsurvey.crawler.service.backend.BackendService;
+import com.domainsurvey.crawler.service.backend.PublicService;
 import com.domainsurvey.crawler.service.crawler.finalizer.CrawlingFinalizerProcessor;
 import com.domainsurvey.crawler.service.crawler.finalizer.impl.ColumnFilterService;
 import com.domainsurvey.crawler.service.dao.DomainCrawlingInfoService;
@@ -31,7 +31,7 @@ public class FinalizingProgressProcessor implements CrawlingFinalizerProcessor {
     private final FillFiltersService fillFiltersService;
     private final DomainService domainService;
     private final DomainCrawlingInfoService domainCrawlingInfoService;
-    private final BackendService backendService;
+    private final PublicService backendService;
 
     public void process(Domain domain) {
         log.info("start: " + domain.getId());
