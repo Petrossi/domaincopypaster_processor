@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Data
 public class Domain implements Serializable {
 
-    public static final String TABLE_PREFIX = "domain";
+    public static final String TABLE_PREFIX = "domains";
 
     private static final long serialVersionUID = -452795351914260163L;
 

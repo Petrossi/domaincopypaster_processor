@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.stereotype.Service;
-import com.domainsurvey.crawler.service.backend.PublicService;
+import com.domainsurvey.crawler.service.backend.BackendService;
 import com.domainsurvey.crawler.service.backend.model.BackendDomain;
 import com.domainsurvey.crawler.web.ws.model.response.MessageDomainInfo;
 
@@ -13,7 +13,7 @@ import com.domainsurvey.crawler.web.ws.model.response.MessageDomainInfo;
 @RequiredArgsConstructor
 public class DomainInfoPublisherService extends AbstractPublisher {
 
-    private final PublicService backendService;
+    private final BackendService backendService;
 
     public void publishSummary(String id) {
         log.info("ask summary for: {}", id);

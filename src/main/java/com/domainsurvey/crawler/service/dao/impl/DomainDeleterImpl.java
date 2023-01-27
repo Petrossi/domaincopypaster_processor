@@ -1,7 +1,7 @@
 package com.domainsurvey.crawler.service.dao.impl;
 
 import com.domainsurvey.crawler.model.domain.Domain;
-import com.domainsurvey.crawler.service.backend.PublicService;
+import com.domainsurvey.crawler.service.backend.BackendService;
 import com.domainsurvey.crawler.service.backend.model.BackendDomain;
 import com.domainsurvey.crawler.service.dao.DomainDeleter;
 import com.domainsurvey.crawler.service.dao.DomainService;
@@ -21,7 +21,7 @@ import static com.domainsurvey.crawler.utils.Utils.sleepSeconds;
 @RequiredArgsConstructor
 public class DomainDeleterImpl implements DomainDeleter {
 
-    private final PublicService backendService;
+    private final BackendService backendService;
     private final DomainService domainService;
     private final TableService tableService;
     private final QueryExecutor queryExecutor;
