@@ -30,6 +30,9 @@ public class Node {
     @Column(name = "type")
     protected NodeType type;
 
+    @Column(name = "download_status")
+    protected NodeType downloadStatus;
+
     @Column(name = "robots_valid")
     private boolean robotsValid;
 

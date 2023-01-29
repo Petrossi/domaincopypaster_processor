@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Data
 public class Domain implements Serializable {
 
-    public static final String TABLE_PREFIX = "domains";
+    public static final String TABLE_PREFIX = "domain";
 
     private static final long serialVersionUID = -452795351914260163L;
 
@@ -89,16 +89,12 @@ public class Domain implements Serializable {
         this.protocol = builder.protocol;
         this.config = builder.config;
         this.id = builder.id;
+        createdTimestamp = getCurrentTimestamp();
     }
 
     public Domain() {
         this.status = CrawlingStatus.CREATED;
         this.priority = CrawlingPriority.NEW;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdTimestamp = getCurrentTimestamp();
     }
 
     public void setConfig(Config config) {

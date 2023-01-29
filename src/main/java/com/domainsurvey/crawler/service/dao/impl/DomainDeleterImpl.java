@@ -29,6 +29,7 @@ public class DomainDeleterImpl implements DomainDeleter {
 
     public void start() {
         new DeleteDeletedThread(() -> {
+            //noinspection InfiniteLoopStatement
             while (true) {
                 try {
                     BackendDomain domain = backendService.getDeletable();

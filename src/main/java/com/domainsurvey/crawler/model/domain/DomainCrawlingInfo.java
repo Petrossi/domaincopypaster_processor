@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import static com.domainsurvey.crawler.utils.Utils.getCurrentTimestamp;
+import static java.util.Objects.isNull;
 
 import java.sql.Timestamp;
 import javax.persistence.Column;
@@ -85,12 +86,10 @@ public class DomainCrawlingInfo {
     @Column(name = "score", columnDefinition = "smallint")
     protected byte score;
 
-    @PrePersist
-    protected void onCreate() {
-        queueAddedTimestamp = getCurrentTimestamp();
-    }
-
     public double minutesFromStart() {
+        if(isNull(crawlingStartedTimestamp)){
+            crawlingStartedTimestamp = getCurrentTimestamp();
+        }
         long timeDiff = (getCurrentTimestamp().getTime() - crawlingStartedTimestamp.getTime()) / 1000;
 
         return (double) timeDiff / 60;
@@ -99,6 +98,7 @@ public class DomainCrawlingInfo {
     public DomainCrawlingInfo(Builder builder) {
         this.domain = builder.domain;
         this.finalizerStatus = FinalizerStatus.NOT_COUNTING;
+        queueAddedTimestamp = getCurrentTimestamp();
     }
 
     public static Builder builder() {

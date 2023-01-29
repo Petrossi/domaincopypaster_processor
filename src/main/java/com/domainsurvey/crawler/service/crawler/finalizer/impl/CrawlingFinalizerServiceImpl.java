@@ -1,5 +1,6 @@
 package com.domainsurvey.crawler.service.crawler.finalizer.impl;
 
+import com.domainsurvey.crawler.service.crawler.finalizer.impl.processor.ResourceDownloaderProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -105,6 +106,7 @@ public class CrawlingFinalizerServiceImpl implements CrawlingFinalizerService, R
             Map<FinalizerStatus, CrawlingFinalizerProcessor> finalizers = new HashMap<FinalizerStatus, CrawlingFinalizerProcessor>() {{
                 put(FinalizerStatus.UPDATE_NODE_COUNT, beanFactory.getBean(UpdateNodeCountProgressProcessor.class));
                 put(FinalizerStatus.UPDATE_REDIRECTED_LINKS, beanFactory.getBean(UpdateRedirectedLinksProgressProcessor.class));
+                put(FinalizerStatus.RESOURCE_DOWNLOADER, beanFactory.getBean(ResourceDownloaderProcessor.class));
                 put(FinalizerStatus.COUNT_PAGE_RANK, beanFactory.getBean(CountPageRankProgressFinalizerProcessor.class));
                 put(FinalizerStatus.IMPORT_INTO_FINAL_TABLES, beanFactory.getBean(ImportIntoFinalTablesProgressProcessor.class));
                 put(FinalizerStatus.FINALIZING, beanFactory.getBean(FinalizingProgressProcessor.class));

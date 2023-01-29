@@ -2,7 +2,6 @@ package com.domainsurvey.crawler.service.dao.painator.link;
 
 import lombok.extern.log4j.Log4j2;
 
-import static org.jooq.SQLDialect.POSTGRES_9_5;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 
@@ -14,6 +13,7 @@ import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Query;
 import org.jooq.Record;
+import org.jooq.SQLDialect;
 import org.jooq.SelectJoinStep;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import com.domainsurvey.crawler.web.ws.model.request.message.DomainPaginationReq
 @Log4j2
 @Component
 public abstract class LinkPaginator implements Paginator<LinkData> {
-    public DSLContext dslContext = DSL.using(POSTGRES_9_5);
+    public DSLContext dslContext = DSL.using(SQLDialect.POSTGRES);
 
     @Autowired
     protected QueryExecutor queryExecutor;

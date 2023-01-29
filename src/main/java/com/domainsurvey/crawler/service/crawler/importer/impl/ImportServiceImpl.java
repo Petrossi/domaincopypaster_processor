@@ -1,5 +1,6 @@
 package com.domainsurvey.crawler.service.crawler.importer.impl;
 
+import com.domainsurvey.crawler.model.type.DownloadStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -79,8 +80,8 @@ public class ImportServiceImpl implements InsertImportService {
         String sql = String.format(
                 insertString,
                 TableService.getFullTableName(domain.getId(), SchemaType.PROCESS, TableType.NODE),
-                "id, url, type, depth, robots_valid, redirect_count, redirected_links",
-                "?, ?, ?, ?, ?, ?, ?::jsonb"
+                "id, url, type, depth, robots_valid, redirect_count, redirected_links, download_status",
+                "?, ?, ?, ?, ?, ?, ?::jsonb,?"
         );
 
         queryExecutor.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -100,6 +101,7 @@ public class ImportServiceImpl implements InsertImportService {
                 ps.setBoolean(5, node.isRobotsValid());
                 ps.setByte(6, node.getRedirectCount());
                 ps.setString(7, redirectedLinks);
+                ps.setByte(8, DownloadStatus.PENDING.getValue());
             }
 
             @Override

@@ -68,7 +68,6 @@ public class BackendService implements Runnable {
             domain.setPagesLimit(rs.getInt("pages_limit"));
             domain.setThreadCount(rs.getByte("thread_count"));
             domain.setStatus(CrawlingStatus.fromValue(rs.getByte("status")));
-            domain.setReportSaved(rs.getBoolean("report_saved"));
 
             return domain;
         });
@@ -87,6 +86,8 @@ public class BackendService implements Runnable {
     @Override
     public void run() {
         log.info("start");
+
+        //noinspection InfiniteLoopStatement
         while (true) {
             try {
                 Domain domain = Domain.builder().backendDomain(getNewDomain()).build();

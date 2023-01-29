@@ -11,6 +11,7 @@ import com.domainsurvey.crawler.service.crawler.processor.CrawlingProcessorServi
 import com.domainsurvey.crawler.service.crawler.store.CrawlingStoreProcessor;
 import com.domainsurvey.crawler.service.crawler.store.model.CrawlingStore;
 import com.domainsurvey.crawler.service.crawler.store.model.StateStore;
+import com.domainsurvey.crawler.service.dao.DomainCrawlingInfoService;
 import com.domainsurvey.crawler.service.dao.QueryExecutor;
 import com.domainsurvey.crawler.service.dao.page.ProgressPageService;
 import com.domainsurvey.crawler.service.fetcher.FetcherProcessor;
@@ -40,6 +41,8 @@ public class CrawlingStoreProcessorImpl implements CrawlingStoreProcessor {
     private QueryExecutor queryExecutor;
     @Autowired
     private FetcherProcessor fetcherProcessor;
+    @Autowired
+    private DomainCrawlingInfoService domainCrawlingInfoService;
 
     private Domain domain;
 
@@ -81,6 +84,8 @@ public class CrawlingStoreProcessorImpl implements CrawlingStoreProcessor {
             addNodesToQueue(nodesToQueue);
 
             crawlingInfo.setCrawlingStartedTimestamp(getCurrentTimestamp());
+
+            domainCrawlingInfoService.save(crawlingInfo);
         } else {
             initQueueFromDB();
         }

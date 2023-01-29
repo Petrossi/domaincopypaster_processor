@@ -70,6 +70,6 @@ public class UpdateRedirectedLinksProgressProcessor implements CrawlingFinalizer
 
     @Override
     public FinalizerStatus getNextStatus() {
-        return FinalizerStatus.COUNT_PAGE_RANK;
+        return FinalizerStatus.RESOURCE_DOWNLOADER;
     }
 }

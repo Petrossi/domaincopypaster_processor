@@ -10,7 +10,8 @@ create table node
     depth            smallint      not null,
     robots_valid     boolean       not null,
     redirect_count   smallint      not null,
-    redirected_links jsonb         not null
+    redirected_links jsonb         not null,
+    download_status             smallint      not null
 );
 
 create table edge

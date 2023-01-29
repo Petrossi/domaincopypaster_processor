@@ -7,12 +7,13 @@ public enum FinalizerStatus {
     NOT_COUNTING((byte) 1),
     UPDATE_NODE_COUNT((byte) 2),
     UPDATE_REDIRECTED_LINKS((byte) 3),
-    COUNT_PAGE_RANK((byte) 4),
-    IMPORT_INTO_FINAL_TABLES((byte) 5),
-    FINALIZING((byte) 6),
-    FINALIZED((byte) 7);
+    RESOURCE_DOWNLOADER((byte) 4),
+    COUNT_PAGE_RANK((byte) 5),
+    IMPORT_INTO_FINAL_TABLES((byte) 6),
+    FINALIZING((byte) 7),
+    FINALIZED((byte) 8);
 
-    private byte value;
+    private final byte value;
 
     FinalizerStatus(byte value) {
         this.value = value;

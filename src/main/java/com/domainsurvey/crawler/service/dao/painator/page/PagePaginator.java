@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.domainsurvey.crawler.service.filter.FilterParserService.ALL_PAGES_FILTER_ID;
-import static org.jooq.SQLDialect.POSTGRES_9_5;
+import static org.jooq.SQLDialect.POSTGRES;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 import static org.jooq.impl.DSL.table;
@@ -44,7 +44,7 @@ public class PagePaginator implements Paginator<PageData> {
         return new PageDataMapper();
     }
 
-    public DSLContext dslContext = DSL.using(POSTGRES_9_5);
+    public DSLContext dslContext = DSL.using(POSTGRES);
 
     List<Field<?>> fields() {
         return new ArrayList<>(Arrays.asList(
