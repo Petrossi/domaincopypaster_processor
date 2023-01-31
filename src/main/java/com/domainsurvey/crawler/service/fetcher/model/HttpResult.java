@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import lombok.NoArgsConstructor;
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 import com.domainsurvey.crawler.utils.Utils;
 
+@NoArgsConstructor
 public class HttpResult implements Serializable {
 
     public short httpStatusCode;
@@ -25,7 +27,8 @@ public class HttpResult implements Serializable {
     public List<String> headers = new ArrayList<>();
     public long loadTime = 0;
     public long realTime = 0;
-    public void setHeaders(HttpResponse response) {
+
+    public void initHeaders(HttpResponse response) {
         headers = Arrays.stream(response.getAllHeaders())
                 .map(header -> header.getName() + " : " + header.getValue())
                 .collect(Collectors.toList())

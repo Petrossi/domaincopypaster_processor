@@ -102,8 +102,7 @@ public class CrawlingFinalizerServiceImpl implements CrawlingFinalizerService, R
                 domainInfo.setFinalizerStatus(FinalizerStatus.UPDATE_NODE_COUNT);
             }
 
-            //TODO import by order
-            Map<FinalizerStatus, CrawlingFinalizerProcessor> finalizers = new HashMap<FinalizerStatus, CrawlingFinalizerProcessor>() {{
+            Map<FinalizerStatus, CrawlingFinalizerProcessor> finalizers = new HashMap<>() {{
                 put(FinalizerStatus.UPDATE_NODE_COUNT, beanFactory.getBean(UpdateNodeCountProgressProcessor.class));
                 put(FinalizerStatus.UPDATE_REDIRECTED_LINKS, beanFactory.getBean(UpdateRedirectedLinksProgressProcessor.class));
                 put(FinalizerStatus.RESOURCE_DOWNLOADER, beanFactory.getBean(ResourceDownloaderProcessor.class));

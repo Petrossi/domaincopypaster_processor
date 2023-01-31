@@ -137,7 +137,7 @@ public class HttpClientFetcher {
             httpRequestConfig.response = httpRequestConfig.httpClient.execute(httpMethod);
             httpResult.httpStatusCode = (short) httpRequestConfig.response.getStatusLine().getStatusCode();
 
-            httpResult.setHeaders(httpRequestConfig.response);
+            httpResult.initHeaders(httpRequestConfig.response);
 
             if (isRedirected(httpResult.httpStatusCode)) {
                 Header locationHeader = httpRequestConfig.response.getFirstHeader("location");

@@ -1,11 +1,20 @@
 package com.domainsurvey.crawler;
 
+import com.domainsurvey.crawler.model.link.Node;
+import com.domainsurvey.crawler.model.type.NodeType;
+import com.domainsurvey.crawler.service.PageModifier;
 import com.domainsurvey.crawler.service.backend.BackendService;
 import com.domainsurvey.crawler.service.crawler.CrawlerUtilsService;
 import com.domainsurvey.crawler.service.crawler.CrawlerWorker;
 import com.domainsurvey.crawler.service.crawler.finalizer.CrawlingFinalizerService;
 import com.domainsurvey.crawler.service.dao.DomainDeleter;
+import com.domainsurvey.crawler.service.dao.DomainService;
+import com.domainsurvey.crawler.service.dao.QueryExecutor;
+import com.domainsurvey.crawler.service.table.TableService;
+import com.domainsurvey.crawler.service.table.type.SchemaType;
+import com.domainsurvey.crawler.service.table.type.TableType;
 import com.domainsurvey.crawler.thread.StartParsingThread;
+import lombok.SneakyThrows;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -34,7 +43,28 @@ public class Application {
         springApplication.addListeners(new PropertiesLogger());
         context = springApplication.run(args);
 
-        startFunctions();
+        test();
+//        startFunctions();
+    }
+
+    @SneakyThrows
+    private static void test() {
+        var domain = context.getBean(DomainService.class).find("1").get();
+
+        String nodeTable = TableService.getFullTableName(domain.getId(), SchemaType.FINAL, TableType.NODE);
+
+        var id = 5346114466323456744L;
+
+        String sql = String.format("SELECT id, url, type FROM %s p where id = %s", nodeTable, id);
+
+        var node = context.getBean(QueryExecutor.class).queryForObject(sql, (rs, var1) -> Node.builder()
+                .id(rs.getLong("id"))
+                .url(rs.getString("url"))
+                .type(NodeType.fromValue(rs.getByte("type"))).build());
+
+        var html = context.getBean(PageModifier.class).build(domain, node);
+
+        System.out.println();
     }
 
     private static void startFunctions() {

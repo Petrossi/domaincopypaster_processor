@@ -1,28 +1,5 @@
 package com.domainsurvey.crawler.service.crawler.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
-
-import static com.domainsurvey.crawler.service.filter.FilterParserService.*;
-import static com.domainsurvey.crawler.utils.Constants.HTTP_EQUIV_REDIRECT;
-import static com.domainsurvey.crawler.utils.UrlHelper.getValidUrl;
-import static com.domainsurvey.crawler.utils.UrlHelper.isUrlValidForDomain;
-import static com.domainsurvey.crawler.utils.Utils.*;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import com.domainsurvey.crawler.dto.RedirectedLink;
 import com.domainsurvey.crawler.exception.MaxRedirectCountException;
 import com.domainsurvey.crawler.model.domain.Domain;
@@ -40,6 +17,38 @@ import com.domainsurvey.crawler.service.urlProcessor.model.HashedMetaData;
 import com.domainsurvey.crawler.service.urlProcessor.model.PageMetaData;
 import com.domainsurvey.crawler.service.urlProcessor.model.SavedMetaData;
 import com.domainsurvey.crawler.utils.robots.SimpleRobotRules;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.domainsurvey.crawler.service.filter.FilterParserService.ANY_ISSUE_ID;
+import static com.domainsurvey.crawler.service.filter.FilterParserService.ERROR_ISSUE_FILTER_ID;
+import static com.domainsurvey.crawler.service.filter.FilterParserService.NOTICE_ISSUE_FILTER_ID;
+import static com.domainsurvey.crawler.service.filter.FilterParserService.NO_ISSUE_FILTER_ID;
+import static com.domainsurvey.crawler.service.filter.FilterParserService.WARNING_ISSUE_FILTER_ID;
+import static com.domainsurvey.crawler.utils.Constants.HTTP_EQUIV_REDIRECT;
+import static com.domainsurvey.crawler.utils.UrlHelper.getValidUrl;
+import static com.domainsurvey.crawler.utils.UrlHelper.isUrlValidForDomain;
+import static com.domainsurvey.crawler.utils.Utils.getCRC32;
+import static com.domainsurvey.crawler.utils.Utils.isApplicationLink;
+import static com.domainsurvey.crawler.utils.Utils.isRedirected;
+import static com.domainsurvey.crawler.utils.Utils.isSuccess;
+import static com.domainsurvey.crawler.utils.Utils.isValidHttpGetContentType;
 
 @NoArgsConstructor
 @Getter
@@ -48,6 +57,7 @@ public class PageResult {
     private PageMetaData pageMetaData;
     private Set<Node> nodes = new HashSet<>();
     private List<Edge> edges = new ArrayList<>();
+    public Map<String, String> originalToValid = new HashMap<>();
     private List<Integer> filters = new ArrayList<>();
     private NodeType nodeType;
     protected long id;
@@ -131,7 +141,7 @@ public class PageResult {
 
     @Log4j2
     public static class Builder {
-        private PageResult pageResult = new PageResult();
+        private final PageResult pageResult = new PageResult();
         private PageMetaData pageMetaData;
 
         private HttpResult httpResult;
@@ -141,7 +151,7 @@ public class PageResult {
         private RobotsTxtParserService robotsTxtParserService;
         private int internalCountTotal;
         private int externalCountTotal;
-        private List<RedirectedLink> linkToProcessRedirectedLinks = new ArrayList<>();
+        private final List<RedirectedLink> linkToProcessRedirectedLinks = new ArrayList<>();
 
         private Document doc;
 
@@ -205,6 +215,8 @@ public class PageResult {
         private void processLinks() {
             Elements allLinks = doc.select("a");
 
+            var originalToValid = new HashMap<String, String>();
+
             for (Element element : allLinks) {
                 String originUrl = element.attr("href").replace(" ", "").trim();
                 boolean needsDecode = originUrl.contains("#");
@@ -227,8 +239,11 @@ public class PageResult {
                 } catch (Exception ignored) {
                 }
 
+                originalToValid.put(originUrl, elementUrl);
                 processLink(elementUrl, metaData);
             }
+
+            pageResult.originalToValid = originalToValid;
 
             if (!domain.getConfig().isIgnoreRobots()) {
                 pageResult.nodes = pageResult.nodes

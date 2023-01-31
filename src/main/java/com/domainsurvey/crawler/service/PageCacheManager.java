@@ -60,7 +60,7 @@ public class PageCacheManager {
         ;
     }
 
-    private String getFullPathForUrl(long crc32DomainUrl, long crc32){
+    public String getFullPathForUrl(long crc32DomainUrl, long crc32){
         return getFullDirectory(crc32DomainUrl)
             .concat("/")
             .concat(String.valueOf(crc32))

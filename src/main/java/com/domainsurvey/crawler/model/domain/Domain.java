@@ -1,14 +1,17 @@
 package com.domainsurvey.crawler.model.domain;
 
+import com.domainsurvey.crawler.dao.util.DomainIdGenerator;
+import com.domainsurvey.crawler.dao.util.enumConverter.CrawlingPriorityConverter;
+import com.domainsurvey.crawler.dao.util.enumConverter.CrawlingStatusConverter;
+import com.domainsurvey.crawler.model.type.CrawlingPriority;
+import com.domainsurvey.crawler.model.type.CrawlingStatus;
+import com.domainsurvey.crawler.service.backend.model.BackendDomain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import static com.domainsurvey.crawler.utils.Utils.getCurrentTimestamp;
-
-import java.io.Serializable;
-import java.sql.Timestamp;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -17,15 +20,10 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
-import com.domainsurvey.crawler.dao.util.DomainIdGenerator;
-import com.domainsurvey.crawler.dao.util.enumConverter.CrawlingPriorityConverter;
-import com.domainsurvey.crawler.dao.util.enumConverter.CrawlingStatusConverter;
-import com.domainsurvey.crawler.model.type.CrawlingPriority;
-import com.domainsurvey.crawler.model.type.CrawlingStatus;
-import com.domainsurvey.crawler.service.backend.model.BackendDomain;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import static com.domainsurvey.crawler.utils.Utils.getCurrentTimestamp;
 
 @Entity(name = Domain.TABLE_PREFIX)
 @Data
@@ -88,6 +86,7 @@ public class Domain implements Serializable {
         this.host = builder.host;
         this.protocol = builder.protocol;
         this.config = builder.config;
+        this.config.setDomain(this);
         this.id = builder.id;
         createdTimestamp = getCurrentTimestamp();
     }
