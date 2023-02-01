@@ -31,6 +31,11 @@ public class DomainServiceImpl implements DomainService {
     }
 
     @Override
+    public Optional<Domain> findByHost(String host) {
+        return domainRepository.findByHost(host);
+    }
+
+    @Override
     public Optional<Domain> findDeleted() {
         return domainRepository.findFirstByStatus(CrawlingStatus.DELETED);
     }

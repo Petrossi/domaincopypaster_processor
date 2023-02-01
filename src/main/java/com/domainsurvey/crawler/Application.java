@@ -43,8 +43,8 @@ public class Application {
         springApplication.addListeners(new PropertiesLogger());
         context = springApplication.run(args);
 
-        test();
-//        startFunctions();
+//        test();
+        startFunctions();
     }
 
     @SneakyThrows

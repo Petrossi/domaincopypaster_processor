@@ -1,16 +1,16 @@
 package com.domainsurvey.crawler.service.dao.painator.link;
 
-import static org.jooq.impl.DSL.table;
-
-import org.jooq.Record;
-import org.jooq.Record1;
-import org.jooq.SelectJoinStep;
-import org.springframework.stereotype.Component;
 import com.domainsurvey.crawler.model.type.NodeType;
 import com.domainsurvey.crawler.service.table.TableService;
 import com.domainsurvey.crawler.service.table.type.SchemaType;
 import com.domainsurvey.crawler.service.table.type.TableType;
 import com.domainsurvey.crawler.web.ws.model.request.message.DomainPaginationRequest;
+import org.jooq.Record;
+import org.jooq.Record1;
+import org.jooq.SelectJoinStep;
+import org.springframework.stereotype.Component;
+
+import static org.jooq.impl.DSL.table;
 
 @Component
 public class InternalLinkPaginator extends LinkPaginator {
@@ -48,11 +48,12 @@ public class InternalLinkPaginator extends LinkPaginator {
         ;
 
         String id = domainPaginationRequest.getAdditionalData().get("id");
+        var type = domainPaginationRequest.getAdditionalData().getOrDefault("type", String.valueOf(NodeType.INTERNAL.getValue()));
         String additionalDataWhere = additionalDataWhere(domainPaginationRequest);
 
         query.where(String.format(
                 "%s.source_id = %s and %s.type = %s %s",
-                TableType.EDGE.getValue(), id, TableType.NODE.getValue(), NodeType.INTERNAL.getValue(), additionalDataWhere
+                TableType.EDGE.getValue(), id, TableType.NODE.getValue(), type, additionalDataWhere
         ));
 
         return query;

@@ -13,6 +13,8 @@ public interface DomainService {
 
     Optional<Domain> find(String id);
 
+    Optional<Domain> findByHost(String host);
+
     Optional<Domain> findDeleted();
 
     Domain getRecentlyCrawledDomain(Domain domain);
