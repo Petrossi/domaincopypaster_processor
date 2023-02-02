@@ -27,8 +27,6 @@ public abstract class AbstractPublisher {
         } catch (Exception e) {
             System.out.println(message.getMessageType());
             e.printStackTrace();
-
-            System.out.println();
         }
     }
 }

@@ -68,19 +68,19 @@ public class PageController {
         return pageModifier.build(getDomainByHost(host), pageId);
     }
 
-    @GetMapping(value = "/js/{domainId}/{pageId}")
+    @GetMapping(value = "/js/{pageId}")
     @ResponseBody
     public void js(@RequestHeader String host, @PathVariable long pageId, HttpServletResponse response) throws Exception {
         download(getDomainByHost(host), pageId, response);
     }
 
-    @GetMapping(value = "/css/{domainId}/{pageId}")
+    @GetMapping(value = "/css/{pageId}")
     @ResponseBody
     public void css(@RequestHeader String host, @PathVariable long pageId, HttpServletResponse response) throws Exception {
         download(getDomainByHost(host), pageId, response);
     }
 
-    @GetMapping(value = "/image/{domainId}/{pageId}")
+    @GetMapping(value = "/image/{pageId}")
     @ResponseBody
     public void image(@RequestHeader String host, @PathVariable long pageId, HttpServletResponse response) throws Exception {
         download(getDomainByHost(host), pageId, response);

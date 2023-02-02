@@ -65,23 +65,34 @@ public class PageModifier {
 
         var doc = Jsoup.parse(html);
 
-        replaceResource(NodeType.IMAGE, domain, node, doc, request);
-        replaceResource(NodeType.CSS, domain, node, doc, request);
-        replaceResource(NodeType.JS, domain, node, doc, request);
+        replaceResource(NodeType.IMAGE, node, doc, request);
+        replaceResource(NodeType.CSS, node, doc, request);
+//        replaceResource(NodeType.JS, node, doc, request);
 
-        replaceLinks(domain, doc, pageResult, request);
+        replaceLinks(doc, pageResult, request);
 
-//        doc.select("script").remove();
-//        doc.select("noscript").remove();
+        doc.select("script").remove();
+        doc.select(".preloader").remove();
+        doc.select(".loader").remove();
+        doc.select("noscript").remove();
+
+        Element head = doc.head();
+
+        doc.body().attr("style", "background-color: blue");
+
 //        doc.select("style").remove();
 
         return doc.html();
     }
 
-    private void replaceLinks(Domain domain, Document doc, PageResult pageResult, DomainPaginationRequest request) {
+    private void replaceLinks(Document doc, PageResult pageResult, DomainPaginationRequest request) {
+        request.getAdditionalData().put("type", String.valueOf(NodeType.INTERNAL.getValue()));
+
         var list = internalLinkPaginator.list(request).getData();
 
         var allLinks = doc.select("a");
+
+        log.info("replace {} with {}", allLinks.size(), list.size());
 
         for (Element element : allLinks) {
             String originUrl = element.attr("href").replace(" ", "").trim();
@@ -89,11 +100,15 @@ public class PageModifier {
 
             var linkNode = list.stream().filter(n -> n.getUrl().equals(valid)).findFirst();
 
-            linkNode.ifPresent(linkData -> element.attr("href", String.format("/%s/%s?%s", domain.getId(), linkData.getId(), originUrl)));
+            if (linkNode.isPresent()) {
+                element.attr("href", String.format("/%s", linkNode.get().getId()));
+            } else {
+//                element.remove();
+            }
         }
     }
 
-    private void replaceResource(NodeType nodeType, Domain domain, Node node, Document doc, DomainPaginationRequest request) {
+    private void replaceResource(NodeType nodeType, Node node, Document doc, DomainPaginationRequest request) {
         request.getAdditionalData().put("type", String.valueOf(nodeType.getValue()));
 
         var list = internalLinkPaginator.list(request).getData();
@@ -118,11 +133,11 @@ public class PageModifier {
             String finalOriginUrl = originUrl;
 
             if (nodeType.equals(NodeType.IMAGE)) {
-                linkNode.ifPresent(linkData -> element.attr("src", String.format("/image/%s/%s?%s", domain.getId(), linkData.getId(), finalOriginUrl)));
+                linkNode.ifPresent(linkData -> element.attr("src", String.format("/image/%s", linkData.getId())));
             } else if (nodeType.equals(NodeType.JS)) {
-                linkNode.ifPresent(linkData -> element.attr("src", String.format("/js/%s/%s?%s", domain.getId(), linkData.getId(), finalOriginUrl)));
+                linkNode.ifPresent(linkData -> element.attr("src", String.format("/js/%s", linkData.getId())));
             } else if (nodeType.equals(NodeType.CSS)) {
-                linkNode.ifPresent(linkData -> element.attr("href", String.format("/css/%s/%s?%s", domain.getId(), linkData.getId(), finalOriginUrl)));
+                linkNode.ifPresent(linkData -> element.attr("href", String.format("/css/%s", linkData.getId())));
             }
         }
     }

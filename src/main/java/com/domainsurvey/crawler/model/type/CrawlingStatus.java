@@ -16,7 +16,7 @@ public enum CrawlingStatus {
     CREATED((byte) 9),
     RE_CRAWLING((byte) 10);
 
-    private byte value;
+    private final byte value;
 
     CrawlingStatus(byte value) {
         this.value = value;
